@@ -58,6 +58,8 @@ namespace NotesManagement
                 if (dt.Rows.Contains(etudiant.CNE))
                     MessageBox.Show("etudiant deja ajouté");
 
+                else
+                    dt.Rows.Add(etudiant.NOM, etudiant.CNE, "", "", "", "", "", "", "");
 
             }
 
