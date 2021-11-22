@@ -19,7 +19,6 @@ namespace NotesManagement
         String filePath = "etudiants.save";
         String filePath1 = "notes.save";
 
-
         DataTable dt = new DataTable("table");
 
         public Form1()
@@ -57,15 +56,9 @@ namespace NotesManagement
                 data.etudiants.Add(etudiant);
 
                 if (dt.Rows.Contains(etudiant.CNE))
-                    MessageBox.Show("etudiant deja ajoute");
+                    MessageBox.Show("etudiant deja ajouté");
 
-                else
-                {
-                    Button moy = new Button();
-                    moy.Text = "Calculer";
-                    dt.Rows.Add(etudiant.NOM, etudiant.CNE, "", "", "", "", "", "", "_______");
 
-                }
             }
 
 
@@ -92,8 +85,16 @@ namespace NotesManagement
             dt.PrimaryKey = keyColumns;
             dataGridView1.DataSource = dt;
 
-            data.etudiants = (List<Etudiant>)dataSerializer.binaryDeserialize(filePath);
-            data.notes = (List<Note>)dataSerializer.binaryDeserialize(filePath1);
+            try
+            {
+                data.etudiants = (List<Etudiant>)dataSerializer.binaryDeserialize(filePath);
+                data.notes = (List<Note>)dataSerializer.binaryDeserialize(filePath1);
+
+            }
+            catch(Exception exception)
+            {
+                Console.WriteLine(exception.GetType().Name);
+            }
 
             comboBox1.DataSource = data.etudiants.Select(i => i.CNE).Distinct().ToList();
 
@@ -139,13 +140,13 @@ namespace NotesManagement
                         }
                         try
                         {
-
                             if (checkRow(dr))
                                 dr["Moyenne"] = n.moyenne(dr);
                         }
                         catch (Exception xp)
                         {
-
+                            
+                            Console.WriteLine(xp.GetType().Name);
                         }
 
                     }
@@ -177,20 +178,6 @@ namespace NotesManagement
             return false;
         }
 
-        public void changeColor()
-        {
-            foreach(DataRow dr in dt.Rows)
-            {
-                float m = 0;
-                float.TryParse(dr["Moyenne"].ToString(), out m);
-
-                if(m>= 10)
-                {
-                    dr["Moyenne"] += " V";
-                }
-
-            }
-        }
         private void button1_Click(object sender, EventArgs e)
         {
             if (comboBox1.SelectedIndex > -1 && !String.IsNullOrEmpty(textBox3.Text) && !String.IsNullOrEmpty(listBox1.SelectedItem.ToString()))
@@ -245,11 +232,9 @@ namespace NotesManagement
 
 
                     }
-                    dataSerializer.binarySerialize(data.etudiants, filePath);
-                    dataSerializer.binarySerialize(data.notes, filePath1);
                 }
-                catch (Exception exception) { 
-                    
+                catch (Exception exception) {
+                    Console.WriteLine(exception.GetType().Name);
                 }
                 
 
@@ -294,6 +279,7 @@ namespace NotesManagement
         public static List<Module> modules = new List<Module>();
         public static List<Note> notes = new List<Note>();
     }
+
 
     class DataSerializer{
         public void binarySerialize(Object data, String filePath)

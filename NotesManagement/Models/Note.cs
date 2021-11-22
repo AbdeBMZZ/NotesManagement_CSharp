@@ -22,7 +22,6 @@ namespace NotesManagement.Models
         {
             try
             {
-
                 float nPoo = 0;
                 float.TryParse(dr["POO"].ToString(), out nPoo);
 
@@ -48,15 +47,13 @@ namespace NotesManagement.Models
                     nUml > -1 && nUml <= 20 &&
                     nTec > -1 && nTec <= 20 &&
                     nWeb > -1 && nWeb <= 20)
-                {
                     return (nPoo + nOracle + nDOTNET + nUml + nTec + nWeb) / 6;
-
-                }
 
 
                 return 0;
             }
             catch(Exception e) {
+                Console.WriteLine(e.GetType().Name);
                 return 0;
             }
 
